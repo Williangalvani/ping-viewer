@@ -54,7 +54,7 @@ It's possible to control:
  * Speed of sound.
  * Minimal distance and length of analysis.
 
-It's alsio possible to realize the connection configuration if auto connection is not able to find your device.
+It's also possible to realize the connection configuration if auto connection is not able to find your device.
  * Sensor type (Right now only ping is available).
  * Connection type:
     * Serial.
