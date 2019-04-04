@@ -90,20 +90,20 @@ Item {
                         }
                     }
                     QQ2.Rectangle {
+                        id: rect
                         width: offscreenTexture.width
                         height: offscreenTexture.height
-                        color: "green"
+                        color: "black"
+                    
 
-                        QMM.MediaPlayer {
-                            id: player
-                            autoPlay: false
-                            loops: QMM.MediaPlayer.Infinite
-                        }
-
-                        QMM.VideoOutput {
-                            id: videoOutput
-                            source: player
-                            anchors.fill: parent
+                        Waterfall {
+                            id: waterfall
+                            width: rect.width
+                            height: rect.height
+                            Layout.fillHeight: true
+                            Layout.fillWidth: true
+                            Layout.preferredWidth: 350
+                            Layout.minimumWidth: 350
                         }
                     }
                 }
@@ -117,6 +117,7 @@ Item {
                         activeFrameGraph:
                             ForwardRenderer {
                                 camera: camera
+                                clearColor: "transparent"
                             }
                     },
                     InputSettings {}
@@ -142,82 +143,10 @@ Item {
                     components: [mesh, material, transform]
                 }
 
-                FileDialog {
-                    id: fileDialog
-                    title: "Please choose a video"
-                    folder: shortcuts.home
-                    onAccepted: {
-                        visible = false
-                        player.source = fileDialog.fileUrl
-                        player.play()
-                    }
-                    onRejected: {
-                        Qt.quit()
-                    }
-                    QQ2.Component.onCompleted: {
-                        visible = true
-                    }
-                }
             }
 
         }
 
-        Waterfall {
-            id: waterfall
-            Layout.fillHeight: true
-            Layout.fillWidth: false
-            Layout.preferredWidth: 350
-            Layout.minimumWidth: 350
-            visible: false
-
-            Rectangle {
-                x: waterfall.mousePos.x - width/2 + height/2
-                y: width/2
-                height: 15
-                width: waterfall.height
-                transform: Rotation { origin.x: height/2; angle: 90}
-                visible: waterfall.containsMouse
-                gradient: Gradient {
-                    GradientStop { position: 0.3; color: "transparent" }
-                    GradientStop { position: 0.5; color: StyleManager.secondaryColor } // Not working with material
-                    GradientStop { position: 0.8; color: "transparent" }
-                }
-
-                ColumnLayout {
-                    x: waterfall.mousePos.y - width/2
-                    y: -height*2
-                    rotation: -90
-                    Text {
-                        id: mouseReadout
-                        text: (waterfall.mouseColumnDepth*SettingsManager.distanceUnits['distanceScalar']).toFixed(2) + SettingsManager.distanceUnits['distance']
-                        color: confidenceToColor(waterfall.mouseColumnConfidence)
-                        font.family: "Arial"
-                        font.pointSize: 15
-                        font.bold: true
-
-                        Text {
-                            id: mouseConfidenceText
-                            x: mouseReadout.width - width
-                            y: mouseReadout.height*4/5
-                            text: transformValue(waterfall.mouseColumnConfidence) + "%"
-                            visible: typeof(waterfall.mouseColumnConfidence) == "number"
-                            color: confidenceToColor(waterfall.mouseColumnConfidence)
-                            font.family: "Arial"
-                            font.pointSize: 10
-                            font.bold: true
-                        }
-                    }
-                }
-            }
-
-            DepthAxis {
-                id: depthAxis
-                anchors.fill: parent
-                start_mm: waterfall.minDepthToDraw
-                end_mm: waterfall.maxDepthToDraw
-                visible: start_mm != end_mm
-            }
-        }
 
         Chart {
             id: chart
