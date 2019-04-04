@@ -23,7 +23,7 @@ Waterfall::Waterfall(QQuickItem *parent):
     _containsMouse(false),
     _smooth(true),
     _updateTimer(new QTimer(this)),
-    currentDrawIndex(displayWidth)
+    currentDrawIndex(0)
 {
     // This is the max depth that ping returns
     setWaterfallMaxDepth(70);
@@ -366,7 +366,7 @@ void Waterfall::draw(const QVector<double>& points, float confidence, float init
         }
     }
     currentDrawIndex++; // This can get to be an issue at very fast update rates from ping
-
+    currentDrawIndex %= displayWidth;
     // Fix max update in 20Hz at max
     if(!_updateTimer->isActive()) {
         _updateTimer->start(50);

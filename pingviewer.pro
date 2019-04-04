@@ -10,7 +10,7 @@ CONFIG += \
     qtquickcompiler \
     static
 
-QT += core charts gui qml quick widgets quickcontrols2 concurrent svg xml
+QT += core charts gui qml quick widgets quickcontrols2 concurrent svg xml 3dquickextras 3dcore 3drender 3dinput 3dquick 3dquickrender
 
 include($$PWD/src/src.pri)
 
