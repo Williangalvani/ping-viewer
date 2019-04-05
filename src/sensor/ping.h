@@ -502,7 +502,7 @@ private:
     bool _ping_enable = false;
 ///@}
 
-    static const uint16_t _num_points = 200;
+    static const uint16_t _num_points = 2000;
 
     // TODO: maybe use vector or uint8_t[] here
     // QVector is only required if points need to be exposed to qml
