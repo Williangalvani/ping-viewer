@@ -4,9 +4,11 @@
 #include <limits>
 
 #include <QtConcurrent>
+#include <QQuickWindow>
 #include <QPainter>
 #include <QtMath>
 #include <QVector>
+#include <QSGSimpleTextureNode>
 
 PING_LOGGING_CATEGORY(waterfall, "ping.waterfall")
 
@@ -14,7 +16,7 @@ PING_LOGGING_CATEGORY(waterfall, "ping.waterfall")
 uint16_t Waterfall::displayWidth = 500;
 
 Waterfall::Waterfall(QQuickItem *parent):
-    QQuickPaintedItem(parent),
+    QQuickItem(parent),
     _image(2048, 2500, QImage::Format_RGBA8888),
     _painter(nullptr),
     _maxDepthToDrawInPixels(0),
@@ -38,6 +40,7 @@ Waterfall::Waterfall(QQuickItem *parent):
     connect(_updateTimer, &QTimer::timeout, this, [&] {update();});
     _updateTimer->setSingleShot(true);
     _updateTimer->start(50);
+    setFlag(ItemHasContents, true);
 }
 
 void Waterfall::clear()
@@ -416,4 +419,19 @@ void Waterfall::hoverEnterEvent(QHoverEvent *event)
     Q_UNUSED(event)
     _containsMouse = true;
     emit containsMouseChanged();
+}
+
+QSGNode *Waterfall::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *)
+{
+    QSGSimpleTextureNode *node= static_cast<QSGSimpleTextureNode *>(oldNode);
+
+    if (!node) {
+        node = new QSGSimpleTextureNode();
+    }
+    QSGTexture *texture = window()->createTextureFromImage(_image);
+    node->setTexture(texture);
+    node->setOwnsTexture(true);
+    node->setRect(boundingRect());
+
+    return node;
 }

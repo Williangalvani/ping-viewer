@@ -11,7 +11,7 @@ Q_DECLARE_LOGGING_CATEGORY(waterfall)
  * @brief Waterfall widget
  *
  */
-class Waterfall : public QQuickPaintedItem
+class Waterfall : public QQuickItem
 {
     Q_OBJECT
 public:
@@ -266,6 +266,9 @@ public:
      * @param event
      */
     void hoverEnterEvent(QHoverEvent *event);
+
+protected:
+    QSGNode *updatePaintNode(QSGNode *, UpdatePaintNodeData *);
 
 private:
     Q_DISABLE_COPY(Waterfall)
